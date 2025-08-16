@@ -8,3 +8,7 @@ Content-Type: application/json
     "apellido": "Gavaz",
     "email": "federicogavaz@juanXXIII.com"
 }
+
+### Probar Action Ping
+POST http://localhost:4004/odata/v2/academic/ping
+Content-Type: application/json

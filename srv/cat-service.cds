@@ -6,4 +6,8 @@ service AcademicService {
     entity Materias      as projection on db.Materia;
     entity Edificios     as projection on db.Edificio;
     entity Aulas         as projection on db.Aula;
+
+
+    //Actions
+    action ping() returns String;
 }
