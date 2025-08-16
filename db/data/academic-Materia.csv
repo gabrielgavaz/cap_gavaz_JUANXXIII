@@ -1,0 +1,9 @@
+ID,nombre,anio,profesor_ID
+7a1c0e3e-4d2f-4c2f-8d13-111111111111,Matemática I,1,79f1b508-bc5e-4b7e-91fd-2d5b9a8b0001
+7a1c0e3e-4d2f-4c2f-8d13-222222222222,Programación I,1,79f1b508-bc5e-4b7e-91fd-2d5b9a8b0002
+5f2a1c3e-9b8d-4c7a-ae21-100000000003,Física I,1,79f1b508-bc5e-4b7e-91fd-2d5b9a8b0001
+3c7e2a5b-1d4f-4a9e-bc32-100000000004,Álgebra,1,79f1b508-bc5e-4b7e-91fd-2d5b9a8b0001
+2a9d4f7c-6e3b-4c1a-9d54-100000000005,Estructuras de Datos,2,79f1b508-bc5e-4b7e-91fd-2d5b9a8b0002
+8e1c3a5d-7b2f-4d6e-a9c1-100000000006,Bases de Datos,2,79f1b508-bc5e-4b7e-91fd-2d5b9a8b0002
+1b3d5f7a-9c2e-4a6b-b1d3-100000000007,Arquitectura de Computadoras,2,79f1b508-bc5e-4b7e-91fd-2d5b9a8b0001
+4e6a8c1b-2d3f-4b5a-9e7c-100000000008,Estadística,2,79f1b508-bc5e-4b7e-91fd-2d5b9a8b0001

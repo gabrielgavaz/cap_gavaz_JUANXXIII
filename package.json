@@ -1,0 +1,53 @@
+{
+  "name": "gavaz_cap_JuanXXIII",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@cap-js-community/odata-v2-adapter": "^1.15.3",
+    "@cap-js/hana": "^2",
+    "@sap/cds": "^9",
+    "@sap/hana-client": "^2.25.29",
+    "@sap/hdi-deploy": "4.5.0",
+    "@sap/xssec": "^4",
+    "express": "^4"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@cap-js/cds-types": "^0.13.0",
+    "@cap-js/sqlite": "^2",
+    "@sap/cds-dk": ">=8",
+    "cap-js-mockdata": "^0.0.3"
+  },
+  "scripts": {
+    "start": "cds-serve"
+  },
+  "cov2ap": {
+    "plugin": true
+  },
+  "cds": {
+    "requires": {
+      "auth": "dummy",
+      "connectivity": true,
+      "destinations": true,
+      "db": {
+        "kind": "sqlite",
+        "model": [
+          "db",
+          "srv"
+        ]
+      },
+      "[production]": {
+        "auth": "xsuaa",
+        "db": { "kind": "hana" }
+      }
+    },
+    "sql": {
+      "native_hana_associations": false
+    }
+  }
+}

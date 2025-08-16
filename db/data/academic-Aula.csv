@@ -1,0 +1,16 @@
+ID,nombre,ubicacion,capacidad,edificio_ID
+d2c6c1e3-5d1a-4d3a-9f6e-1a6b9f0a1001,Aula 101,Planta baja - Ala Norte,30,5e5c6c6b-aaaa-4e9c-9c9c-aaaaaaaaaaaa
+b7d3e3f9-9f2b-4a2c-8e3a-4b6a2c7d1002,Aula 102,Planta baja - Ala Sur,28,5e5c6c6b-aaaa-4e9c-9c9c-aaaaaaaaaaaa
+1b8e5f2a-7c4d-4b4c-9e2f-2e9d3a6b1003,Aula 103,Planta baja - Ala Este,24,5e5c6c6b-aaaa-4e9c-9c9c-aaaaaaaaaaaa
+e0a5b9d1-4f7c-4b1e-8c2a-6d9f1a3b1004,Aula 201,Primer piso - Ala Norte,35,5e5c6c6b-aaaa-4e9c-9c9c-aaaaaaaaaaaa
+9f3c7a1e-2d4b-4f6a-9c1e-7b8d2a5c1005,Aula 202,Primer piso - Ala Sur,32,5e5c6c6b-aaaa-4e9c-9c9c-aaaaaaaaaaaa
+6c1e9b3a-8d2f-4a7c-9e5b-2f7a1c3d1006,Aula 203,Primer piso - Ala Este,26,5e5c6c6b-aaaa-4e9c-9c9c-aaaaaaaaaaaa
+0a9b1c3d-5e7f-4a2b-8c1d-9e3f7b6a1007,Aula 301,Segundo piso - Ala Norte,40,5e5c6c6b-aaaa-4e9c-9c9c-aaaaaaaaaaaa
+4e7b9a1c-2f5d-4c6a-9e3b-1d8f2a7c1008,Aula 302,Segundo piso - Ala Sur,38,5e5c6c6b-aaaa-4e9c-9c9c-aaaaaaaaaaaa
+a1c4e7b9-3d2f-4b5a-8e6c-2a9f1d7e1009,Aula 303,Segundo piso - Ala Este,34,5e5c6c6b-aaaa-4e9c-9c9c-aaaaaaaaaaaa
+c9d2e1f3-4a7b-5c6d-8e9f-1a2b3c4d1010,Aula 401,Tercer piso - Ala Norte,50,5e5c6c6b-bbbb-4e9c-9c9c-bbbbbbbbbbbb
+2e3f4a5b-6c7d-8e9f-1a2b-3c4d5e6f1011,Aula 402,Tercer piso - Ala Sur,45,5e5c6c6b-bbbb-4e9c-9c9c-bbbbbbbbbbbb
+7b8c9d1e-2f3a-4b5c-6d7e-8f9a1b2c1012,Aula 403,Tercer piso - Ala Este,42,5e5c6c6b-bbbb-4e9c-9c9c-bbbbbbbbbbbb
+f1e2d3c4-b5a6-4978-9c0d-1e2f3a4b1013,Aula 501,Cuarto piso - Ala Norte,60,5e5c6c6b-bbbb-4e9c-9c9c-bbbbbbbbbbbb
+3a4b5c6d-7e8f-4a1b-9c2d-3e4f5a6b1014,Aula 502,Cuarto piso - Ala Sur,55,5e5c6c6b-bbbb-4e9c-9c9c-bbbbbbbbbbbb
+8f7e6d5c-4b3a-2c1d-9e8f-7a6b5c4d1015,Aula 503,Cuarto piso - Ala Este,48,5e5c6c6b-bbbb-4e9c-9c9c-bbbbbbbbbbbb
