@@ -7,22 +7,22 @@ const createAlumnoBefore = async (req) => {
     const tx = cds.transaction(req);
 
     // Validamos todos los campos obligatorios
-    validation.validationRequiredFields(req, ["dni", "nombre", "apellido","email"]);
+    validation.validationRequiredFields(req, ["legajo", "nombre", "apellido","email"]);
 
     // Normalizamos el DNI
-    let { dni } = req.data;
-    dni = commons.normalizeDni(dni);
-    req.data.dni = dni;
+    let { legajo } = req.data;
+    legajo = commons.normalizeDni(legajo);
+    req.data.legajo = legajo;
 
     // Verificamos existencia
     const exists = await tx.run(
-        cds.ql.SELECT.one.from(req.target).columns("ID").where({ dni })
+        cds.ql.SELECT.one.from(req.target).columns("ID").where({ legajo })
     );
 
     if (exists) {
-        return req.reject(409, `Ya existe un alumno con el DNI ${dni}.`, {
-        target: "dni",
-        code: "DNI_EXISTS",
+        return req.reject(409, `Ya existe un Profesor con el Legajo ${legajo}.`, {
+        target: "legajo",
+        code: "LEGAJO_EXISTS",
         });
     }
 }
