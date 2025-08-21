@@ -8,13 +8,17 @@
 // =======================================================
 
 namespace academic;
-using { managed } from '@sap/cds/common';
+
+using {managed} from '@sap/cds/common';
 
 
 // -------------------------------------------------------
 // Tipos y enums
 // -------------------------------------------------------
-type Semestre : String enum { S1; S2 };
+type Semestre : String enum {
+  S1;
+  S2
+};
 
 
 // -------------------------------------------------------
@@ -22,26 +26,48 @@ type Semestre : String enum { S1; S2 };
 // -------------------------------------------------------
 entity Carrera {
   key ID     : UUID;
-      codigo : String(10);     // p.ej. T-INF, LIC-SOFT
-      nombre : String(120);    // p.ej. Tecnicatura en Informática
-      tipo   : String enum { Tecnicatura; Grado };
+      codigo : String(10); // p.ej. T-INF, LIC-SOFT
+      nombre : String(120); // p.ej. Tecnicatura en Informática
+      tipo   : String enum {
+        Tecnicatura;
+        Grado
+      };
 }
 
 entity PlanCarrera {
   key ID            : UUID;
       carrera       : Association to Carrera;
-      anioVigencia  : Integer;        // p.ej. 2023
-      duracionAnios : Integer;        // p.ej. 3, 5
-      estado        : String enum { Vigente; Antiguo };
+      anioVigencia  : Integer; // p.ej. 2023
+      duracionAnios : Integer; // p.ej. 3, 5
+      estado        : String enum {
+        Vigente;
+        Antiguo
+      };
 }
 
 // Materia está asociada a un Plan.
 entity Materia {
+  key ID     : UUID;
+      nombre : String(100);
+
+}
+
+/** Tabla puente: Materias incluidas en un Plan */
+entity PlanMateria {
   key ID       : UUID;
-      nombre   : String(100);
-      anio     : Integer;             // año dentro del plan (1..N)
-      semestre : Semestre;            // S1 / S2
       plan     : Association to PlanCarrera;
+      materia  : Association to Materia;
+
+      // Atributos que dependen del plan
+      anio     : Integer;
+      semestre : Semestre;
+
+      // Útil para reglas (optativo)
+      estado   : String enum {
+        Activa;
+        Optativa;
+        Inactiva
+      } default 'Activa';
 }
 
 
@@ -49,14 +75,15 @@ entity Materia {
 // Personas
 // -------------------------------------------------------
 entity Profesor {
-  key ID       : UUID;
-      legajo   : String(20);
-      nombre   : String(80);
-      apellido : String(80);
-      email    : String(120);
+  key ID         : UUID;
+      legajo     : String(20);
+      nombre     : String(80);
+      apellido   : String(80);
+      email      : String(120);
 
-  // Navegación a Comisiones dictadas por el profesor
-  comisiones : Association to many Comision on comisiones.profesor = $self;
+      // Navegación a Comisiones dictadas por el profesor
+      comisiones : Association to many Comision
+                     on comisiones.profesor = $self;
 }
 
 entity Alumno : managed {
@@ -66,12 +93,12 @@ entity Alumno : managed {
       apellido      : String(80);
       email         : String(120);
 
-  // Plan de carrera al que está inscripto el alumno (opcional)
-  plan          : Association to PlanCarrera;
+      // Plan de carrera al que está inscripto el alumno 
+      plan          : Association to PlanCarrera;
 
-  // Relación de composición: el Alumno es "dueño" de sus Inscripciones
-  inscripciones : Composition of many Inscripcion
-                    on inscripciones.alumno = $self;
+      // Relación de composición
+      inscripciones : Composition of many Inscripcion
+                        on inscripciones.alumno = $self;
 }
 
 
@@ -97,9 +124,9 @@ entity Aula {
 // Períodos lectivos y Oferta de cursada (Comisiones)
 // -------------------------------------------------------
 entity PeriodoLectivo {
-  key ID      : UUID;
-      anio    : Integer;   // p.ej. 2025
-      semestre: Semestre;  // S1 / S2
+  key ID       : UUID;
+      anio     : Integer; // p.ej. 2025
+      semestre : Semestre; // S1 / S2
 }
 
 // Comision = sección/oferta concreta de una Materia en un período,
@@ -110,7 +137,7 @@ entity Comision {
       periodo  : Association to PeriodoLectivo;
       profesor : Association to Profesor;
       aula     : Association to Aula;
-      cupo     : Integer;           // opcional: capacidad específica
+      cupo     : Integer; // opcional: capacidad específica
 }
 
 
@@ -118,26 +145,34 @@ entity Comision {
 // Cursada y Evaluación
 // -------------------------------------------------------
 entity Inscripcion : managed {
-  key ID        : UUID;
+  key ID           : UUID;
 
       // Alumno inscripto a una oferta concreta (Comision)
-      alumno    : Association to Alumno   ;
-      comision  : Association to Comision ;
+      alumno       : Association to Alumno;
+      comision     : Association to Comision;
 
       // Estado académico de la inscripción
-      notaFinal : Integer;                 // calculada a partir de Evaluaciones (opcional)
-      estado    : String enum { Cursando; Aprobado; Reprobado } default 'Cursando';
+      notaFinal    : Integer; // calculada a partir de Evaluaciones (opcional)
+      estado       : String enum {
+        Cursando;
+        Aprobado;
+        Reprobado
+      } default 'Cursando';
 
-  // Evaluaciones (Parcial1, Parcial2, Recuperatorio)
-  evaluaciones : Composition of many Evaluacion
-                  on evaluaciones.inscripcion = $self;
+      // Evaluaciones (Parcial1, Parcial2, Recuperatorio)
+      evaluaciones : Composition of many Evaluacion
+                       on evaluaciones.inscripcion = $self;
 }
 
 entity Evaluacion : managed {
   key ID          : UUID;
       inscripcion : Association to Inscripcion;
-      tipo        : String enum { Parcial1; Parcial2; Recuperatorio };
-      nota        : Integer;   // 1..10
+      tipo        : String enum {
+        Parcial1;
+        Parcial2;
+        Recuperatorio
+      };
+      nota        : Integer; // 1..10
       fecha       : Date;
 }
 

@@ -12,3 +12,13 @@ Content-Type: application/json
 ### Probar Action Ping
 POST http://localhost:4004/odata/v2/academic/ping
 Content-Type: application/json
+
+
+###
+### Materias de un plan específico
+GET http://localhost:4004/odata/v2/academic/Materias?$filter=plan_ID eq 22222222-3333-4444-8555-666666666001
+
+
+###
+### Planes y su carrera
+GET http://localhost:4004/odata/v4/academic/PlanCarreras?$select=ID,anioVigencia,estado&$expand=carrera($select=nombre,codigo)
