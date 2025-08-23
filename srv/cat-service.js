@@ -14,6 +14,8 @@ module.exports = async (srv) => {
     // PLAN MATERIAS
     // srv.before("READ", "PlanMaterias", planMateria.readPlanMateriasBefore);   
     srv.before("CREATE", "PlanMaterias", planMateria.createPlanMateriaBefore); 
+    srv.before("UPDATE", "PlanMaterias", planMateria.updatePlanMateriaBefore); 
+    srv.before('DELETE', 'PlanMaterias', planMateria.deletePlanMateriaBefore);
 
 
 

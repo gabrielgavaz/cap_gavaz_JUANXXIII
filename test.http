@@ -39,8 +39,6 @@ Content-Type: application/json
 ### (Alumno/consulta) Ver materias (solo planes Publicados)
 GET http://localhost:4004/odata/v2/academic/PlanMaterias?$filter=plan_ID eq 11111111-2222-4333-8444-555555555001&$expand=materia($select=nombre)
 
-### (Decano) Ver todo (incluye Borrador/Archivado)
-GET http://localhost:4004/odata/v2/academic/PlanMaterias?$orderby=anio asc,semestre asc&$expand=materia,plan
 
 
 
@@ -119,3 +117,121 @@ Content-Type: application/json
   "anio": 1,
   "semestre": "S1"
 }
+
+
+
+
+
+### (Decano) Ver todo (incluye Borrador/Archivado)
+GET http://localhost:4004/odata/v2/academic/PlanMaterias?$filter=ID eq 6165fb41-9a72-4ce9-b244-47c38b240932
+
+
+
+### Crear una fila en PlanMateria (plan en Borrador) para poder hacer PUT
+POST http://localhost:4004/odata/v2/academic/PlanMaterias
+Content-Type: application/json
+
+{
+  "plan_ID": "11111111-2222-4333-8444-555555555006",
+  "materia_ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee0013",
+  "anio": 1,
+  "semestre": "S1"
+}
+
+### PUT OK: cambiar anio/semestre/estado (mismos plan_ID y materia_ID)
+PUT http://localhost:4004/odata/v2/academic/PlanMaterias(ID=guid'6165fb41-9a72-4ce9-b244-47c38b240932')
+Content-Type: application/json
+
+{
+  "anio": 2,
+  "semestre": "S2",
+  "estado": "Optativa"
+}
+
+### PUT ERROR: semestre inválido (solo S1/S2) -> 400
+PUT http://localhost:4004/odata/v2/academic/PlanMaterias(ID=guid'6165fb41-9a72-4ce9-b244-47c38b240932')
+Content-Type: application/json
+
+{
+  "plan_ID": "11111111-2222-1333-8444-555555555006",
+  "materia_ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee0013",
+  "anio": 2,
+  "semestre": "S1",
+  "estado": "Activa"
+}
+
+### PUT ERROR: año fuera de rango (plan 555007 dura 5) -> 400
+PUT http://localhost:4004/odata/v2/academic/PlanMaterias(ID=guid'6165fb41-9a72-4ce9-b244-47c38b240932')
+Content-Type: application/json
+
+{
+  "anio": 6,
+  "semestre": "S1",
+  "estado": "Activa"
+}
+
+### PUT ERROR: intentar cambiar materia_ID (no permitido) -> 400
+PUT http://localhost:4004/odata/v2/academic/PlanMaterias(ID=guid'6165fb41-9a72-4ce9-b244-47c38b240932')
+Content-Type: application/json
+
+{
+  "plan_ID": "11111111-2222-4333-8444-555555555007",
+  "materia_ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee0001",
+  "anio": 2,
+  "semestre": "S1",
+  "estado": "Activa"
+}
+
+### PUT ERROR: intentar cambiar plan_ID (no permitido) -> 400
+PUT http://localhost:4004/odata/v2/academic/PlanMaterias(ID=guid'6165fb41-9a72-4ce9-b244-47c38b240932')
+Content-Type: application/json
+
+{
+  "plan_ID": "11111111-2222-4333-8444-555555555001",
+  "materia_ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee0015",
+  "anio": 2,
+  "semestre": "S1",
+  "estado": "Activa"
+}
+
+
+### OK (plan en Borrador)
+DELETE http://localhost:4004/odata/v2/academic/PlanMaterias(ID=guid'6165fb41-9a72-4ce9-b244-47c38b240932')
+Content-Type: application/json
+
+### Bloqueado: plan no está en Borrador (por ejemplo Vigente/Publicado)
+DELETE http://localhost:4004/odata/v2/academic/PlanMaterias(ID='3f1c5c90-5d3a-4b5e-8b9f-0a7f8b2a0001')
+Content-Type: application/json
+### No encontrado
+DELETE http://localhost:4004/odata/v2/academic/PlanMaterias(ID=guid'00000000-0000-0000-0000-000000000000')
+Content-Type: application/json
+
+
+
+
+
+
+###
+GET http://localhost:4004/odata/v2/academic/PlanMaterias
+
+###
+POST http://localhost:4004/odata/v2/academic/PlanMaterias
+Content-Type: application/json
+
+{
+  "plan_ID": "11111111-2222-4333-8444-555555555006",
+  "materia_ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee0006",
+  "anio": 1,
+  "semestre": "S1",
+  "estado": "Activa"
+}
+
+
+
+
+
+
+
+
+
+
