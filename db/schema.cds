@@ -41,7 +41,8 @@ entity PlanCarrera {
       duracionAnios : Integer; // p.ej. 3, 5
       estado        : String enum {
         Vigente;
-        Antiguo
+        Antiguo;
+        Borrador
       };
 }
 

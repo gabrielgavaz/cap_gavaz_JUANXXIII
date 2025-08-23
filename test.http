@@ -22,3 +22,100 @@ GET http://localhost:4004/odata/v2/academic/Materias?$filter=plan_ID eq 22222222
 ###
 ### Planes y su carrera
 GET http://localhost:4004/odata/v4/academic/PlanCarreras?$select=ID,anioVigencia,estado&$expand=carrera($select=nombre,codigo)
+
+### (Decano) Crear PlanMateria
+POST http://localhost:4004/odata/v4/academic/PlanMaterias
+Authorization: Basic decano:
+Content-Type: application/json
+
+{
+  "ID": "pm-3333-4444-5555-6666-777777777001",
+  "plan_ID": "11111111-2222-4333-8444-555555555001",
+  "materia_ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee0001",
+  "anio": 1,
+  "semestre": "S1"
+}
+
+### (Alumno/consulta) Ver materias (solo planes Publicados)
+GET http://localhost:4004/odata/v2/academic/PlanMaterias?$filter=plan_ID eq 11111111-2222-4333-8444-555555555001&$expand=materia($select=nombre)
+
+### (Decano) Ver todo (incluye Borrador/Archivado)
+GET http://localhost:4004/odata/v2/academic/PlanMaterias?$orderby=anio asc,semestre asc&$expand=materia,plan
+
+
+
+### 1) Error: faltan campos obligatorios
+POST http://localhost:4004/odata/v2/academic/PlanMaterias
+Content-Type: application/json
+
+{}
+
+### 2) Error: Plan no encontrado
+POST http://localhost:4004/odata/v2/academic/PlanMaterias
+Content-Type: application/json
+
+{
+  "plan_ID": "00000000-0000-0000-0000-000000000999",
+  "materia_ID": "11111111-1111-1111-1111-111111111111",
+  "anio": 1,
+  "semestre": "S1"
+}
+
+### 3) Error: Plan no editable (estado ≠ Borrador)
+# Asegurate de tener creado un PlanCarrera con estado = "Activo"
+POST http://localhost:4004/odata/v2/academic/PlanMaterias
+Content-Type: application/json
+
+{
+  "plan_ID": "11111111-2222-4333-8444-555555555007",
+  "materia_ID": "11111111-1111-1111-1111-111111111111",
+  "anio": 1,
+  "semestre": "S1"
+}
+
+### 4) Error: Materia no encontrada
+# Asegurate de tener un PlanCarrera en Borrador
+POST http://localhost:4004/odata/v2/academic/PlanMaterias
+Content-Type: application/json
+
+{
+  "plan_ID": "<ID_DE_PLAN_BORRADOR>",
+  "materia_ID": "00000000-0000-0000-0000-000000000999",
+  "anio": 1,
+  "semestre": "S1"
+}
+
+### 5) Error: Año fuera de rango
+# plan.duracionAnios = 3
+POST http://localhost:4004/odata/v2/academic/PlanMaterias
+Content-Type: application/json
+
+{
+  "plan_ID": "11111111-2222-4333-8444-555555555007",
+  "materia_ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee0015",
+  "anio": 6,
+  "semestre": "S1"
+}
+
+### 6) Error: Semestre inválido
+POST http://localhost:4004/odata/v2/academic/PlanMaterias
+Content-Type: application/json
+
+{
+  "plan_ID": "11111111-2222-4333-8444-555555555007",
+  "materia_ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee0015",
+  "anio": 1,
+  "semestre": "S3"
+}
+
+### 7) Error: Duplicado plan + materia
+# Primero crear un registro válido en PlanMateria con ese plan_ID y materia_ID
+POST http://localhost:4004/odata/v2/academic/PlanMaterias
+Content-Type: application/json
+
+{
+  "plan_ID": "11111111-2222-4333-8444-555555555007",
+  "materia_ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee0015",
+  "anio": 1,
+  "semestre": "S1"
+}

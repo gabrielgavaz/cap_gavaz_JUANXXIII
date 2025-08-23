@@ -8,6 +8,7 @@ service AcademicService {
     entity Aulas        as projection on db.Aula;
     entity PlanCarreras as projection on db.PlanCarrera;
     entity Carreras     as projection on db.Carrera;
+    entity PlanMaterias as projection on db.PlanMateria;
 
 
 //Actions
