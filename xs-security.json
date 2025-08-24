@@ -1,5 +1,11 @@
 {
   "scopes": [],
   "attributes": [],
-  "role-templates": []
+  "role-templates": [],
+  "oauth2-configuration": {
+  "credential-types": [
+      "instance-secret"
+    ]
+  },
+  "authorities-inheritance": false
 }
