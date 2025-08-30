@@ -228,10 +228,104 @@ Content-Type: application/json
 
 
 
+### CREATE OK
+POST http://localhost:4004/odata/v2/academic/PlanCarreras
+Content-Type: application/json
+
+{
+  "ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee1234",
+  "carrera_ID": "9b4b9b90-6a2b-4d61-9b1e-6b8b5c2a1001",
+  "anioVigencia": 2026,
+  "duracionAnios": 3,
+  "estado": "Borrador"
+}
+
+### CREATE duplicado carrera+año -> 409
+POST http://localhost:4004/odata/v2/academic/PlanCarreras
+Content-Type: application/json
+
+{
+  "ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee5678",
+  "carrera_ID": "9b4b9b90-6a2b-4d61-9b1e-6b8b5c2a1001",
+  "anioVigencia": 2026,
+  "duracionAnios": 3,
+  "estado": "Borrador"
+}
+
+### UPDATE OK (PUT) — cambiando duración
+PUT http://localhost:4004/odata/v2/academic/PlanCarreras(ID=guid'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee1234')
+Content-Type: application/json
+
+{
+  "ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee1234",
+  "carrera_ID": "9b4b9b90-6a2b-4d61-9b1e-6b8b5c2a1001",
+  "anioVigencia": 2026,
+  "duracionAnios": 4,
+  "estado": "Borrador"
+}
+
+### UPDATE ERROR — intentar cambiar carrera_ID
+PUT http://localhost:4004/odata/v2/academic/PlanCarreras(ID=guid'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee1234')
+Content-Type: application/json
+
+{
+  "ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee1234",
+  "carrera_ID": "f1a2b3c4-d5e6-47f8-9a10-112233445501",   
+  "anioVigencia": 2026,
+  "duracionAnios": 4,
+  "estado": "Borrador"
+}
+
+### UPDATE ERROR — anioVigencia fuera de rango
+PATCH http://localhost:4004/odata/v2/academic/PlanCarreras(ID=guid'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee1234')
+Content-Type: application/json
+
+{ "anioVigencia": 1999 }
+
+### DELETE ERROR — si tiene PlanMaterias o no está en Borrador
+DELETE http://localhost:4004/odata/v2/academic/PlanCarreras(ID=guid'11111111-2222-4333-8444-555555555001')
+
+### DELETE OK — plan en Borrador sin materias
+DELETE http://localhost:4004/odata/v2/academic/PlanCarreras(ID=guid'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee1234')
 
 
 
 
 
+### CREATE OK
+POST http://localhost:4004/odata/v2/academic/Materias
+Content-Type: application/json
+
+{
+  "ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee9999",
+  "nombre": "Introducción a la Robótica"
+}
+
+### CREATE ERROR: nombre vacío
+POST http://localhost:4004/odata/v2/academic/Materias
+Content-Type: application/json
+
+{ "nombre": "   " }
+
+### CREATE ERROR: duplicado (exacto)
+POST http://localhost:4004/odata/v2/academic/Materias
+Content-Type: application/json
+
+{ "nombre": "Introducción a la Robótica" }
+
+### PUT OK: renombrar (mismo ID)
+PUT http://localhost:4004/odata/v2/academic/Materias(ID=guid'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee9999')
+Content-Type: application/json
+
+{
+  "ID": "aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee9999",
+  "nombre": "Robótica I"
+}
+
+### DELETE ERROR: en uso por PlanMateria
+DELETE http://localhost:4004/odata/v2/academic/Materias(ID=guid'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee0001')
+
+### DELETE OK: sin referencias
+DELETE http://localhost:4004/odata/v2/academic/Materias(ID=guid'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee9999')
 
 

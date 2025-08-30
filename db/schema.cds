@@ -178,6 +178,14 @@ entity Evaluacion : managed {
 }
 
 
+
+
+
+
+
+
+
+
 // -------------------------------------------------------
 // Recomendaciones de persistencia (índices)
 //  - Unicidad: un Alumno no puede inscribirse dos veces
