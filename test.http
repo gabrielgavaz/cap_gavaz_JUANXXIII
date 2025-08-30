@@ -329,3 +329,63 @@ DELETE http://localhost:4004/odata/v2/academic/Materias(ID=guid'aaaaaaaa-bbbb-4c
 DELETE http://localhost:4004/odata/v2/academic/Materias(ID=guid'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeee9999')
 
 
+
+
+### CREATE OK
+POST http://localhost:4004/odata/v2/academic/Carreras
+Content-Type: application/json
+
+{
+  "ID": "b1b1b1b1-2222-3333-4444-555555555555",
+  "codigo": "lic-soft",
+  "nombre": "Licenciatura en Software",
+  "tipo": "Grado"
+}
+
+### CREATE ERROR: código inválido (espacios / largo)
+POST http://localhost:4004/odata/v2/academic/Carreras
+Content-Type: application/json
+
+{
+  "codigo": "CODIGO MUY LARGO 123",
+  "nombre": "Prueba",
+  "tipo": "Tecnicatura"
+}
+
+### CREATE ERROR: código duplicado
+POST http://localhost:4004/odata/v2/academic/Carreras
+Content-Type: application/json
+
+{
+  "codigo": "LIC-SOFT",              
+  "nombre": "Otra carrera",
+  "tipo": "Grado"
+}
+
+### PUT OK: cambiar nombre/tipo (código inmutable)
+PUT http://localhost:4004/odata/v2/academic/Carreras(ID=guid'b1b1b1b1-2222-3333-4444-555555555555')
+Content-Type: application/json
+
+{
+  "ID": "b1b1b1b1-2222-3333-4444-555555555555",
+  "codigo": "LIC-SOFT",
+  "nombre": "Licenciatura en Ingeniería de Software",
+  "tipo": "Grado"
+}
+
+### PUT ERROR: intentar cambiar código
+PUT http://localhost:4004/odata/v2/academic/Carreras(ID=guid'b1b1b1b1-2222-3333-4444-555555555555')
+Content-Type: application/json
+
+{
+  "ID": "b1b1b1b1-2222-3333-4444-555555555555",
+  "codigo": "NUEVO-COA",
+  "nombre": "Lic. Ingeniería de Software",
+  "tipo": "Grado"
+}
+
+### DELETE ERROR: carrera usada por un plan
+DELETE http://localhost:4004/odata/v2/academic/Carreras(ID=guid'9b4b9b90-6a2b-4d61-9b1e-6b8b5c2a1001')
+
+### DELETE OK: carrera sin planes
+DELETE http://localhost:4004/odata/v2/academic/Carreras(ID=guid'b1b1b1b1-2222-3333-4444-555555555555')

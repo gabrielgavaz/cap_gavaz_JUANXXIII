@@ -10,6 +10,11 @@ module.exports = async (srv) => {
     //PROFESORES
     // srv.before("CREATE", "Profesores", profesor.createProfesorBefore)
 
+
+    srv.before('CREATE', 'Carreras', planMateria.createCarreraBefore);
+    srv.before('UPDATE', 'Carreras', planMateria.updateCarreraBefore);
+    srv.before('DELETE', 'Carreras', planMateria.deleteCarreraBefore);
+
     srv.before('CREATE', 'PlanCarreras', planMateria.createPlanCarreraBefore);
     srv.before('UPDATE', 'PlanCarreras', planMateria.updatePlanCarreraBefore);
     srv.before('DELETE', 'PlanCarreras', planMateria.deletePlanCarreraBefore);

@@ -3,7 +3,105 @@ const commons = require("../helpers/commons");
 const validation = require("../helpers/validations");
 
 
+/**
+ * CREATE Carrera
+ * - Requeridos: codigo, nombre, tipo
+ * - Normaliza: codigo (trim, sin espacios, UPPER), nombre (trim, colapsa espacios)
+ * - Validación: codigo 1..10, solo A-Z 0-9 - _ .
+ * - Unicidad: codigo único (case-insensitive por normalización a UPPER)
+ */
+const createCarreraBefore = async (req) => {
+  const tx = cds.transaction(req);
 
+  // Requeridos
+  if (req.data.codigo == null) return req.reject(400, 'El campo "codigo" es obligatorio.', { target: 'codigo' });
+  if (req.data.nombre == null) return req.reject(400, 'El campo "nombre" es obligatorio.', { target: 'nombre' });
+  if (req.data.tipo   == null) return req.reject(400, 'El campo "tipo" es obligatorio.',   { target: 'tipo' });
+
+  // Normalización
+  let codigo = String(req.data.codigo).trim().toUpperCase().replace(/\s+/g, '');
+  let nombre = String(req.data.nombre).trim().replace(/\s+/g, ' ');
+
+  // Reglas codigo
+  if (codigo.length === 0 || codigo.length > 10)
+    return req.reject(400, 'El "codigo" debe tener entre 1 y 10 caracteres.', { target: 'codigo' });
+  if (!/^[A-Z0-9._-]+$/.test(codigo))
+    return req.reject(400, 'El "codigo" solo admite letras, números, guión, guión bajo y punto.', { target: 'codigo' });
+
+  // Longitud nombre
+  if (nombre.length === 0 || nombre.length > 120)
+    return req.reject(400, 'El "nombre" debe tener entre 1 y 120 caracteres.', { target: 'nombre' });
+
+  // Unicidad por codigo (normalizado)
+  const dup = await tx.run(
+    cds.ql.SELECT.one.from('Carrera').columns('ID').where({ codigo })
+  );
+  if (dup) {
+    return req.reject(409, 'Ya existe una carrera con ese código.', { target: 'codigo', code: 'CARRERA_CODE_DUP' });
+  }
+
+  // Persistimos normalizado
+  req.data.codigo = codigo;
+  req.data.nombre = nombre;
+  // "tipo" lo valida el enum del modelo (Tecnicatura | Grado)
+};
+
+/**
+ * UPDATE Carrera
+ * - No permitir cambiar "codigo" (código institucional)
+ * - Si viene "nombre": mismas validaciones de longitud/trim
+ * - "tipo" lo valida el enum; si viene, se acepta
+ */
+const updateCarreraBefore = async (req) => {
+  const tx = cds.transaction(req);
+
+  const id = req.data?.ID ?? req.params?.[0]?.ID;
+  if (!id) return req.reject(400, 'Falta ID de Carrera.');
+
+  const current = await tx.run(
+    cds.ql.SELECT.one.from('Carrera').columns('ID','codigo','nombre','tipo').where({ ID: id })
+  );
+  if (!current) return req.reject(404, 'Carrera no encontrada.');
+
+  // No permitir cambiar el código
+  if ('codigo' in req.data && String(req.data.codigo).toUpperCase() !== current.codigo) {
+    return req.reject(400, 'No se permite cambiar el código de la carrera.', { target: 'codigo' });
+  }
+
+  // Validar/normalizar nombre si viene
+  if ('nombre' in req.data) {
+    let nombre = String(req.data.nombre).trim().replace(/\s+/g, ' ');
+    if (nombre.length === 0 || nombre.length > 120) {
+      return req.reject(400, 'El "nombre" debe tener entre 1 y 120 caracteres.', { target: 'nombre' });
+    }
+    req.data.nombre = nombre;
+  }
+
+  // "tipo" es enum -> lo valida el modelo si viene
+};
+
+/**
+ * DELETE Carrera
+ * - Bloquear si está referenciada por algún PlanCarrera
+ */
+const deleteCarreraBefore = async (req) => {
+  const tx = cds.transaction(req);
+
+  const id = req.data?.ID ?? req.params?.[0]?.ID;
+  if (!id) return req.reject(400, 'Falta ID de Carrera.');
+
+  const exists = await tx.run(
+    cds.ql.SELECT.one.from('Carrera').columns('ID').where({ ID: id })
+  );
+  if (!exists) return req.reject(404, 'Carrera no encontrada.');
+
+  const used = await tx.run(
+    cds.ql.SELECT.one.from('PlanCarrera').columns('ID').where({ carrera_ID: id })
+  );
+  if (used) {
+    return req.reject(400, 'No se puede eliminar: la carrera tiene planes asociados.', { code: 'CARRERA_IN_USE' });
+  }
+};
 
 /**
  * CREATE PlanCarrera:
@@ -406,6 +504,10 @@ const deleteMateriaBefore = async (req) => {
 
 
 module.exports = {
+  createCarreraBefore,
+  updateCarreraBefore,
+  deleteCarreraBefore,
+
   createPlanCarreraBefore,
   updatePlanCarreraBefore,
   deletePlanCarreraBefore,
